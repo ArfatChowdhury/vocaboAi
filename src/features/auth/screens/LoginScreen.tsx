@@ -1,198 +1,160 @@
 import React, { useState } from 'react';
-import {
-    View,
-    Text,
-    StyleSheet,
-    TouchableOpacity,
-    ActivityIndicator,
-    Alert,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { useAuth } from '../hooks/useAuth';
 import { useGoogleSignIn } from '../hooks/useGoogleSignIn';
+import { AuthLayout } from '../../../shared/components/AuthLayout';
+import { Input } from '../../../shared/components/Input';
+import { Button } from '../../../shared/components/Button';
 
 export const LoginScreen = () => {
-    const { signIn: emailSignIn, loading: authLoading } = useAuth();
-    const { signIn: googleSignIn, loading: googleLoading } = useGoogleSignIn();
-    
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+  const { signIn: emailSignIn, loading: authLoading } = useAuth();
+  const { signIn: googleSignIn, loading: googleLoading } = useGoogleSignIn();
 
-    const handleEmailSignIn = async () => {
-        if (!email || !password) {
-            Alert.alert('Error', 'Please enter both email and password');
-            return;
-        }
-        try {
-            await emailSignIn({ email, password });
-        } catch (err: any) {
-            Alert.alert('Login Failed', err.message);
-        }
-    };
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-    const handleGoogleSignIn = async () => {
-        const user = await googleSignIn();
-        if (user) {
-            console.log('Signed in with Google:', user.email);
-        }
-    };
+  const handleEmailSignIn = async () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Please enter both email and password');
+      return;
+    }
+    try {
+      await emailSignIn({ email, password });
+    } catch (err: any) {
+      Alert.alert('Login Failed', err.message);
+    }
+  };
 
-    const isLoading = authLoading || googleLoading;
+  const handleGoogleSignIn = async () => {
+    const user = await googleSignIn();
+    if (user) {
+      console.log('Signed in with Google:', user.email);
+    }
+  };
 
-    return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={styles.container}
-        >
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
-                <View style={styles.header}>
-                    <Text style={styles.title}>Welcome to VocaboAi</Text>
-                    <Text style={styles.subtitle}>Sign in to continue</Text>
-                </View>
+  const isLoading = authLoading || googleLoading;
 
-                <View style={styles.form}>
-                    {/* Simplified Form for UI demonstration */}
-                    <View style={styles.placeholderInput}>
-                       <Text style={styles.placeholderText}>Email and Password fields would go here</Text>
-                    </View>
+  const footer = (
+    <View style={styles.footerRow}>
+      <Text style={styles.footerText}>Don't have an account? </Text>
+      <TouchableOpacity onPress={() => console.log('Navigate to SignUp')}>
+        <Text style={styles.footerLink}>Sign Up</Text>
+      </TouchableOpacity>
+    </View>
+  );
 
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={handleEmailSignIn}
-                        disabled={isLoading}
-                    >
-                        {authLoading ? (
-                            <ActivityIndicator color="#fff" />
-                        ) : (
-                            <Text style={styles.buttonText}>Sign In</Text>
-                        )}
-                    </TouchableOpacity>
+  return (
+    <AuthLayout
+      title="Welcome Back"
+      subtitle="Sign in to your VocaboAi account"
+      footer={footer}
+    >
+      <Input
+        label="Email Address"
+        placeholder="Enter your email"
+        value={email}
+        onChangeText={setEmail}
+        autoCapitalize="none"
+        keyboardType="email-address"
+        editable={!isLoading}
+      />
+      
+      <Input
+        label="Password"
+        placeholder="Enter your password"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+        editable={!isLoading}
+      />
 
-                    <View style={styles.divider}>
-                        <View style={styles.line} />
-                        <Text style={styles.dividerText}>OR</Text>
-                        <View style={styles.line} />
-                    </View>
+      <View style={styles.spacing} />
 
-                    <TouchableOpacity
-                        style={styles.googleButton}
-                        onPress={handleGoogleSignIn}
-                        disabled={isLoading}
-                    >
-                        {googleLoading ? (
-                            <ActivityIndicator color="#000" />
-                        ) : (
-                            <View style={styles.googleButtonContent}>
-                                <View style={styles.googleIconPlaceholder} />
-                                <Text style={styles.googleButtonText}>Sign in with Google</Text>
-                            </View>
-                        )}
-                    </TouchableOpacity>
-                </View>
-            </ScrollView>
-        </KeyboardAvoidingView>
-    );
+      <Button
+        label="Sign In"
+        onPress={handleEmailSignIn}
+        isLoading={authLoading}
+      />
+
+      <View style={styles.divider}>
+        <View style={styles.line} />
+        <Text style={styles.dividerText}>OR</Text>
+        <View style={styles.line} />
+      </View>
+
+      <TouchableOpacity
+        style={styles.googleButton}
+        onPress={handleGoogleSignIn}
+        disabled={isLoading}
+      >
+        {googleLoading ? (
+          <ActivityIndicator color="#000" />
+        ) : (
+          <View style={styles.googleButtonContent}>
+            <View style={styles.googleIconPlaceholder} />
+            <Text style={styles.googleButtonText}>Sign in with Google</Text>
+          </View>
+        )}
+      </TouchableOpacity>
+    </AuthLayout>
+  );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-    },
-    scrollContainer: {
-        flexGrow: 1,
-        justifyContent: 'center',
-        padding: 20,
-    },
-    header: {
-        alignItems: 'center',
-        marginBottom: 40,
-    },
-    title: {
-        fontSize: 28,
-        fontWeight: 'bold',
-        color: '#1a1a1a',
-    },
-    subtitle: {
-        fontSize: 16,
-        color: '#666',
-        marginTop: 10,
-    },
-    form: {
-        width: '100%',
-    },
-    placeholderInput: {
-        height: 100,
-        backgroundColor: '#f5f5f5',
-        borderRadius: 12,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 20,
-        borderWidth: 1,
-        borderColor: '#eee',
-    },
-    placeholderText: {
-        color: '#999',
-        fontSize: 14,
-    },
-    button: {
-        backgroundColor: '#007AFF',
-        height: 56,
-        borderRadius: 12,
-        justifyContent: 'center',
-        alignItems: 'center',
-        shadowColor: '#007AFF',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.2,
-        shadowRadius: 8,
-        elevation: 3,
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
-    divider: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginVertical: 30,
-    },
-    line: {
-        flex: 1,
-        height: 1,
-        backgroundColor: '#eee',
-    },
-    dividerText: {
-        marginHorizontal: 15,
-        color: '#999',
-        fontSize: 14,
-    },
-    googleButton: {
-        backgroundColor: '#fff',
-        height: 56,
-        borderRadius: 12,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: '#ddd',
-        flexDirection: 'row',
-    },
-    googleButtonContent: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    googleIconPlaceholder: {
-        width: 24,
-        height: 24,
-        backgroundColor: '#4285F4', // Google Blue
-        marginRight: 10,
-        borderRadius: 4,
-    },
-    googleButtonText: {
-        color: '#1a1a1a',
-        fontSize: 16,
-        fontWeight: '600',
-    },
+  spacing: {
+    height: 10,
+  },
+  divider: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 30,
+  },
+  line: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#eee',
+  },
+  dividerText: {
+    marginHorizontal: 15,
+    color: '#999',
+    fontSize: 14,
+  },
+  googleButton: {
+    backgroundColor: '#fff',
+    height: 56,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  googleButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  googleIconPlaceholder: {
+    width: 24,
+    height: 24,
+    backgroundColor: '#4285F4',
+    marginRight: 10,
+    borderRadius: 4,
+  },
+  googleButtonText: {
+    color: '#1a1a1a',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  footerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  footerText: {
+    color: '#666',
+    fontSize: 14,
+  },
+  footerLink: {
+    color: '#007AFF',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
 });
