@@ -5,13 +5,14 @@ import {
     User 
 } from 'firebase/auth';
 import { auth } from '../../../config/firebase';
+import { GOOGLE_WEB_CLIENT_ID } from '@env';
 
 export const googleAuthService = {
     /**
      * Configure Google Sign-In with the Web Client ID from Firebase
      */
     configure(): void {
-        const webClientId = process.env.GOOGLE_WEB_CLIENT_ID || '1053891785607-qni3iq7bb9u33p2um31hddpkmp9b8ajr.apps.googleusercontent.com';
+        const webClientId = GOOGLE_WEB_CLIENT_ID;
         if (!webClientId) {
             console.warn('Google Sign-In: webClientId is missing in .env');
         }
