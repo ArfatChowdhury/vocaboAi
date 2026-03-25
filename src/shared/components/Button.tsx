@@ -1,11 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-native';
-
-interface ButtonProps {
-  label: string;
-  onPress: () => void;
-  isLoading?: boolean;
-}
+import { ButtonProps } from '../types/components';
+import { colors } from '../theme/colors';
 
 export const Button: React.FC<ButtonProps> = ({ label, onPress, isLoading }) => {
   return (
@@ -16,7 +12,7 @@ export const Button: React.FC<ButtonProps> = ({ label, onPress, isLoading }) => 
       activeOpacity={0.8}
     >
       {isLoading ? (
-        <ActivityIndicator color="#ffffff" />
+        <ActivityIndicator color={colors.white} />
       ) : (
         <Text style={styles.buttonText}>{label}</Text>
       )}
@@ -26,13 +22,13 @@ export const Button: React.FC<ButtonProps> = ({ label, onPress, isLoading }) => 
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#007AFF', // Primary blue
+    backgroundColor: colors.primary, // Primary blue
     height: 50,
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
-    shadowColor: '#007AFF',
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -42,7 +38,7 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   buttonText: {
-    color: '#ffffff',
+    color: colors.white,
     fontSize: 16,
     fontWeight: 'bold',
   },

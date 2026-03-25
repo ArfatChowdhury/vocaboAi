@@ -4,6 +4,7 @@ import { useAuth } from '../hooks/useAuth';
 import { AuthLayout } from '../../../shared/components/AuthLayout';
 import { Input } from '../../../shared/components/Input';
 import { Button } from '../../../shared/components/Button';
+import { colors } from '../../../shared/theme/colors';
 
 // Note: If you have a navigation prop, you can type it here.
 export const SignUpScreen = () => {
@@ -100,7 +101,7 @@ const styles = StyleSheet.create({
     height: 10,
   },
   mainErrorText: {
-    color: '#FF3B30',
+    color: colors.error.text,
     fontSize: 14,
     marginBottom: 20,
     textAlign: 'center',
@@ -111,11 +112,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   footerText: {
-    color: '#666',
+    color: colors.text.secondary,
     fontSize: 14,
   },
   footerLink: {
-    color: '#007AFF',
+    color: colors.primary,
     fontSize: 14,
     fontWeight: 'bold',
   },

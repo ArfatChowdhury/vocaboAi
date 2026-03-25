@@ -5,6 +5,7 @@ import { useGoogleSignIn } from '../hooks/useGoogleSignIn';
 import { AuthLayout } from '../../../shared/components/AuthLayout';
 import { Input } from '../../../shared/components/Input';
 import { Button } from '../../../shared/components/Button';
+import { colors } from '../../../shared/theme/colors';
 
 export const LoginScreen = () => {
   const { signIn: emailSignIn, loading: authLoading } = useAuth();
@@ -112,21 +113,21 @@ const styles = StyleSheet.create({
   line: {
     flex: 1,
     height: 1,
-    backgroundColor: '#eee',
+    backgroundColor: colors.border.default,
   },
   dividerText: {
     marginHorizontal: 15,
-    color: '#999',
+    color: colors.text.placeholder,
     fontSize: 14,
   },
   googleButton: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     height: 56,
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: colors.border.google,
   },
   googleButtonContent: {
     flexDirection: 'row',
@@ -135,12 +136,12 @@ const styles = StyleSheet.create({
   googleIconPlaceholder: {
     width: 24,
     height: 24,
-    backgroundColor: '#4285F4',
+    backgroundColor: colors.social.google,
     marginRight: 10,
     borderRadius: 4,
   },
   googleButtonText: {
-    color: '#1a1a1a',
+    color: colors.text.primary,
     fontSize: 16,
     fontWeight: '600',
   },
@@ -149,11 +150,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   footerText: {
-    color: '#666',
+    color: colors.text.secondary,
     fontSize: 14,
   },
   footerLink: {
-    color: '#007AFF',
+    color: colors.primary,
     fontSize: 14,
     fontWeight: 'bold',
   },

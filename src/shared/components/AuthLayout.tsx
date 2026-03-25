@@ -8,13 +8,8 @@ import {
   ScrollView,
   SafeAreaView,
 } from 'react-native';
-
-interface AuthLayoutProps {
-  title: string;
-  subtitle?: string;
-  children: React.ReactNode;
-  footer?: React.ReactNode;
-}
+import { AuthLayoutProps } from '../types/components';
+import { colors } from '../theme/colors';
 
 export const AuthLayout: React.FC<AuthLayoutProps> = ({
   title,
@@ -51,7 +46,7 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.background,
   },
   container: {
     flex: 1,
@@ -68,12 +63,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#1a1a1a',
+    color: colors.text.primary,
     textAlign: 'center',
   },
   subtitle: {
     fontSize: 16,
-    color: '#666666',
+    color: colors.text.secondary,
     marginTop: 8,
     textAlign: 'center',
   },
