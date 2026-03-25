@@ -30,3 +30,11 @@ export interface LikedPost {
   postId: number
   likedAt: string
 }
+
+// State for a single post with its comments
+export interface PostDetailState {
+  post: Post | null
+  comments: Comment[] | null
+  isLoading: boolean
+  error: string | null
+}
