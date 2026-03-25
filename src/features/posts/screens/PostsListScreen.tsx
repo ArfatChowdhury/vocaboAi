@@ -10,24 +10,24 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import usePosts from '../hooks/usePosts';
 import { Card } from '../../../shared/components/Card';
-import { colors as Colors } from '../../../shared/constants/Colors';
-import ThemeContext from '../../../config/ThemeContext';
+import { useTheme } from '../../../config/ThemeContext';
 
 /**
  * PostsListScreen
  * Displays a scrollable list of blog posts from JSONPlaceholder.
  * Uses usePosts hook for data, caching, and state management.
+ * Uses useTheme hook for dynamic dark/light mode switching.
  */
 const PostsListScreen = () => {
   const navigation = useNavigation<any>();
   const { data: posts, isLoading, error } = usePosts();
-  const themeContext = React.useContext(ThemeContext);
+  const { colors } = useTheme();
 
   // Center indicator while loading initial data
   if (isLoading && !posts) {
     return (
-      <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color={Colors.primary} />
+      <View style={styles(colors).centerContainer}>
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
@@ -35,14 +35,14 @@ const PostsListScreen = () => {
   // Display error message if fetch fails and no cache exists
   if (error && !posts) {
     return (
-      <View style={styles.centerContainer}>
-        <Text style={styles.errorText}>{error}</Text>
+      <View style={styles(colors).centerContainer}>
+        <Text style={styles(colors).errorText}>{error}</Text>
       </View>
     );
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles(colors).container}>
       <FlatList
         data={posts}
         keyExtractor={(item) => item.id.toString()}
@@ -54,17 +54,17 @@ const PostsListScreen = () => {
             onPress={() => navigation.navigate('PostDetail', { postId: item.id })}
           />
         )}
-        contentContainerStyle={styles.listContent}
+        contentContainerStyle={styles(colors).listContent}
         showsVerticalScrollIndicator={false}
       />
     </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
+const styles = (colors: any) => StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: colors.background,
   },
   listContent: {
     padding: 16,
@@ -75,10 +75,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: Colors.background,
+    backgroundColor: colors.background,
   },
   errorText: {
-    color: Colors.error.text,
+    color: colors.error.text,
     fontSize: 16,
     textAlign: 'center',
   },
