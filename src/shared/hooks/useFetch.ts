@@ -19,11 +19,14 @@ function useFetch<T>(endpoint: string): FetchState<T> {
     const cacheKey = `cache_${endpoint}`;
 
     const fetchData = async () => {
+      let hasCachedData = false;
+
       // Step 3: Check AsyncStorage for cached data first
       try {
         const cachedValue = await AsyncStorage.getItem(cacheKey);
         if (cachedValue && isMounted) {
           setData(JSON.parse(cachedValue));
+          hasCachedData = true;
           // Show cache immediately and stop initial loading spinner
           setIsLoading(false);
         }
@@ -35,9 +38,9 @@ function useFetch<T>(endpoint: string): FetchState<T> {
       // Step 4: Always fetch fresh data from the API
       try {
         const response = await fetch(fullUrl);
-        
+
         if (!response.ok) {
-          throw new Error(`Error: ${response.status} ${response.statusText}`);
+          throw new Error(`Error: ${response.status}`);
         }
 
         const freshData = await response.json();
@@ -46,18 +49,16 @@ function useFetch<T>(endpoint: string): FetchState<T> {
           setData(freshData);
           setError(null);
           setIsLoading(false);
-          
+
           // Step 5: Save fresh data to AsyncStorage
           await AsyncStorage.setItem(cacheKey, JSON.stringify(freshData));
         }
       } catch (err: any) {
         if (isMounted) {
           // Step 6 & 7: Check if we have cached data before setting error
-          const currentCache = await AsyncStorage.getItem(cacheKey);
-          
-          if (!currentCache) {
+          if (!hasCachedData) {
             // No cache available, show error to user
-            setError(err.message || 'An unknown error occurred');
+            setError(err.message || 'Failed to load. Check your connection.');
           }
           // If cache exists, we stay silent as per requirement #6
           setIsLoading(false);
