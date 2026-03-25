@@ -62,7 +62,7 @@ const PostDetailScreen = () => {
 
   return (
     <SafeAreaView style={styles(colors).container}>
-      <ScrollView 
+      <ScrollView
         style={styles(colors).scrollView}
         contentContainerStyle={styles(colors).scrollContent}
         showsVerticalScrollIndicator={false}
@@ -73,13 +73,13 @@ const PostDetailScreen = () => {
 
         {/* Interaction Row */}
         <View style={styles(colors).interactionRow}>
-          <TouchableOpacity 
-            style={styles(colors).likeButton} 
+          <TouchableOpacity
+            style={styles(colors).likeButton}
             onPress={handleLikeToggle}
             activeOpacity={0.7}
           >
             <Text style={[
-              styles(colors).heartIcon, 
+              styles(colors).heartIcon,
               isLiked && styles(colors).heartIconActive
             ]}>
               {isLiked ? '♥' : '♡'}
