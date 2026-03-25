@@ -4,7 +4,7 @@ import { useAuth } from '../hooks/useAuth';
 import { AuthLayout } from '../../../shared/components/AuthLayout';
 import { Input } from '../../../shared/components/Input';
 import { Button } from '../../../shared/components/Button';
-import { colors } from '../../../shared/theme/colors';
+import { colors } from '../../../shared/constants/Colors';
 
 // Note: If you have a navigation prop, you can type it here.
 export const SignUpScreen = () => {

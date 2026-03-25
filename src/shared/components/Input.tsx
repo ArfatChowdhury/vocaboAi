@@ -1,7 +1,11 @@
 import React from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
-import { InputProps } from '../types/components';
-import { colors } from '../theme/colors';
+import { View, Text, TextInput, StyleSheet, TextInputProps } from 'react-native';
+import { colors } from '../constants/Colors';
+
+export interface InputProps extends TextInputProps {
+  label?: string;
+  error?: string;
+}
 
 export const Input: React.FC<InputProps> = ({ 
   label, 

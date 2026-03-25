@@ -1,7 +1,12 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-native';
-import { ButtonProps } from '../types/components';
-import { colors } from '../theme/colors';
+import { colors } from '../constants/Colors';
+
+export interface ButtonProps {
+  label: string;
+  onPress: () => void;
+  isLoading?: boolean;
+}
 
 export const Button: React.FC<ButtonProps> = ({ label, onPress, isLoading }) => {
   return (

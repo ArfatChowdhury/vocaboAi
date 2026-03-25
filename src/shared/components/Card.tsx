@@ -1,7 +1,12 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
-import { CardProps } from '../types/components';
-import { colors } from '../theme/colors';
+import { colors } from '../constants/Colors';
+
+export interface CardProps {
+  title: string;
+  body: string;
+  onPress?: () => void;
+}
 
 export const Card: React.FC<CardProps> = ({ title, body, onPress }) => {
   const CardContent = (

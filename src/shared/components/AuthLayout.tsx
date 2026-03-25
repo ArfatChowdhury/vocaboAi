@@ -6,10 +6,16 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  SafeAreaView,
 } from 'react-native';
-import { AuthLayoutProps } from '../types/components';
-import { colors } from '../theme/colors';
+import { colors } from '../constants/Colors';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
+export interface AuthLayoutProps {
+  title: string;
+  subtitle?: string;
+  children: React.ReactNode;
+  footer?: React.ReactNode;
+}
 
 export const AuthLayout: React.FC<AuthLayoutProps> = ({
   title,

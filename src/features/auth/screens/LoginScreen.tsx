@@ -5,7 +5,7 @@ import { useGoogleSignIn } from '../hooks/useGoogleSignIn';
 import { AuthLayout } from '../../../shared/components/AuthLayout';
 import { Input } from '../../../shared/components/Input';
 import { Button } from '../../../shared/components/Button';
-import { colors } from '../../../shared/theme/colors';
+import { colors } from '../../../shared/constants/Colors';
 
 export const LoginScreen = () => {
   const { signIn: emailSignIn, loading: authLoading } = useAuth();
