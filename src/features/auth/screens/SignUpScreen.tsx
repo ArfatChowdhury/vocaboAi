@@ -1,9 +1,19 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+  StatusBar,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+} from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../hooks/useAuth';
-import { AuthLayout } from '../../../shared/components/AuthLayout';
 import { Input } from '../../../shared/components/Input';
 import { Button } from '../../../shared/components/Button';
 import { useTheme } from '../../../config/ThemeContext';
@@ -23,22 +33,18 @@ export const SignUpScreen = () => {
 
   const handleSignUp = async () => {
     setError('');
-
     if (!email || !password || !confirmPassword) {
       setError('Please fill in all fields');
       return;
     }
-
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       return;
     }
-
     if (password.length < 6) {
-      setError('Password should be at least 6 characters');
+      setError('Password must be at least 6 characters');
       return;
     }
-
     try {
       await signUp({ email, password });
     } catch (err: any) {
@@ -46,84 +52,158 @@ export const SignUpScreen = () => {
     }
   };
 
-  const footer = (
-    <View style={styles(colors).footerRow}>
-      <Text style={styles(colors).footerText}>Already have an account? </Text>
-      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-        <Text style={styles(colors).footerLink}>Sign In</Text>
-      </TouchableOpacity>
-    </View>
-  );
+  const s = styles(colors);
 
   return (
-    <AuthLayout
-      title="Create Account"
-      subtitle="Sign up to get started with VocaboAi"
-      footer={footer}
-    >
-      {error ? <Text style={styles(colors).mainErrorText}>{error}</Text> : null}
+    <SafeAreaView style={s.safe}>
+      <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      >
+        <ScrollView
+          contentContainerStyle={s.scroll}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Back link */}
+          <TouchableOpacity style={s.backRow} onPress={() => navigation.navigate('Login')}>
+            <Text style={s.backArrow}>←</Text>
+            <Text style={s.backText}>Back to Sign In</Text>
+          </TouchableOpacity>
 
-      <Input
-        label="Email Address"
-        placeholder="Enter your email"
-        value={email}
-        onChangeText={setEmail}
-        autoCapitalize="none"
-        keyboardType="email-address"
-        editable={!authLoading}
-      />
+          {/* Header */}
+          <View style={s.header}>
+            <Text style={s.headline}>Create your account</Text>
+            <Text style={s.subheadline}>Join VocaboAi and start reading</Text>
+          </View>
 
-      <Input
-        label="Password"
-        placeholder="Create a password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        editable={!authLoading}
-      />
+          {/* Card */}
+          <View style={s.card}>
+            {error ? (
+              <View style={s.errorBanner}>
+                <Text style={s.errorBannerText}>⚠ {error}</Text>
+              </View>
+            ) : null}
 
-      <Input
-        label="Confirm Password"
-        placeholder="Confirm your password"
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
-        secureTextEntry
-        editable={!authLoading}
-      />
+            <Input
+              label="Email Address"
+              placeholder="you@example.com"
+              value={email}
+              onChangeText={setEmail}
+              autoCapitalize="none"
+              keyboardType="email-address"
+              editable={!authLoading}
+            />
+            <Input
+              label="Password"
+              placeholder="Min. 6 characters"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+              editable={!authLoading}
+            />
+            <Input
+              label="Confirm Password"
+              placeholder="Re-enter password"
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              secureTextEntry
+              editable={!authLoading}
+            />
 
-      <View style={styles(colors).spacing} />
+            <View style={{ height: 8 }} />
+            <Button label="Create Account" onPress={handleSignUp} isLoading={authLoading} />
 
-      <Button
-        label="Sign Up"
-        onPress={handleSignUp}
-        isLoading={authLoading}
-      />
-    </AuthLayout>
+            {/* Terms note */}
+            <Text style={s.terms}>
+              By creating an account you agree to our{' '}
+              <Text style={s.termsLink}>Terms of Service</Text>
+            </Text>
+          </View>
+
+          {/* Footer */}
+          <View style={s.footer}>
+            <Text style={s.footerText}>Already have an account? </Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+              <Text style={s.footerLink}>Sign In</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
 const styles = (colors: any) => StyleSheet.create({
-  spacing: {
-    height: 10,
-  },
-  mainErrorText: {
-    color: colors.error.text,
-    fontSize: 14,
-    marginBottom: 20,
-    textAlign: 'center',
-    fontWeight: '500',
-  },
-  footerRow: {
+  safe: { flex: 1, backgroundColor: colors.background },
+  scroll: { flexGrow: 1, paddingHorizontal: 24, paddingBottom: 32 },
+
+  backRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    paddingTop: 16,
+    marginBottom: 24,
   },
-  footerText: {
+  backArrow: { fontSize: 20, color: colors.primary, marginRight: 6 },
+  backText: { fontSize: 14, color: colors.primary, fontWeight: '600' },
+
+  header: { marginBottom: 28 },
+  headline: {
+    fontSize: 28,
+    fontWeight: '800',
+    color: colors.text.primary,
+    letterSpacing: -0.5,
+  },
+  subheadline: {
+    fontSize: 15,
     color: colors.text.secondary,
-    fontSize: 14,
+    marginTop: 6,
   },
-  footerLink: {
-    color: colors.primary,
-    fontSize: 14,
-    fontWeight: 'bold',
+
+  card: {
+    backgroundColor: colors.surface,
+    borderRadius: 24,
+    padding: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 20,
+    elevation: 5,
+    borderWidth: 1,
+    borderColor: colors.border.card,
   },
+
+  errorBanner: {
+    backgroundColor: colors.error.background,
+    borderRadius: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: colors.error.text,
+  },
+  errorBannerText: {
+    color: colors.error.text,
+    fontSize: 13,
+    fontWeight: '500',
+  },
+
+  terms: {
+    marginTop: 16,
+    fontSize: 12,
+    color: colors.text.muted,
+    textAlign: 'center',
+    lineHeight: 18,
+  },
+  termsLink: { color: colors.primary, fontWeight: '600' },
+
+  footer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 28,
+  },
+  footerText: { fontSize: 14, color: colors.text.secondary },
+  footerLink: { fontSize: 14, fontWeight: '700', color: colors.primary },
 });

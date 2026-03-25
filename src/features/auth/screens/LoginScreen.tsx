@@ -6,18 +6,73 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
+  StatusBar,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../hooks/useAuth';
 import { useGoogleSignIn } from '../hooks/useGoogleSignIn';
-import { AuthLayout } from '../../../shared/components/AuthLayout';
 import { Input } from '../../../shared/components/Input';
 import { Button } from '../../../shared/components/Button';
 import { useTheme } from '../../../config/ThemeContext';
 import { RootStackParamList } from '../../../navigation/RootNavigator';
 
 type LoginNavProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
+
+/**
+ * GoogleIcon - renders the multi-colored Google "G" using colored Views.
+ */
+const GoogleIcon = () => (
+  <View style={googleIconStyles.wrapper}>
+    {/* Top-left red */}
+    <View style={[googleIconStyles.slice, { borderTopColor: '#EA4335', borderRightColor: 'transparent', borderBottomColor: 'transparent', borderLeftColor: 'transparent' }]} />
+    {/* Top-right blue */}
+    <View style={[googleIconStyles.slice, { borderTopColor: '#4285F4', borderRightColor: '#4285F4', borderBottomColor: 'transparent', borderLeftColor: 'transparent', transform: [{ rotate: '90deg' }] }]} />
+    {/* Inner white circle mask */}
+    <View style={googleIconStyles.innerCircle}>
+      <Text style={googleIconStyles.gLetter}>G</Text>
+    </View>
+  </View>
+);
+
+const googleIconStyles = StyleSheet.create({
+  wrapper: {
+    width: 24,
+    height: 24,
+    marginRight: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  slice: {
+    position: 'absolute',
+    width: 0,
+    height: 0,
+  },
+  innerCircle: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 2.5,
+    borderColor: '#4285F4',
+    borderRightColor: '#34A853',
+    borderBottomColor: '#FBBC05',
+    borderLeftColor: '#EA4335',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#ffffff',
+  },
+  gLetter: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: '#4285F4',
+    lineHeight: 14,
+    marginLeft: 1,
+  },
+});
 
 export const LoginScreen = () => {
   const { colors } = useTheme();
@@ -30,7 +85,7 @@ export const LoginScreen = () => {
 
   const handleEmailSignIn = async () => {
     if (!email || !password) {
-      Alert.alert('Error', 'Please enter both email and password');
+      Alert.alert('Missing Fields', 'Please enter both email and password.');
       return;
     }
     try {
@@ -41,135 +96,211 @@ export const LoginScreen = () => {
   };
 
   const handleGoogleSignIn = async () => {
-    const user = await googleSignIn();
-    if (user) {
-      console.log('Signed in with Google:', user.email);
-    }
+    await googleSignIn();
   };
 
   const isLoading = authLoading || googleLoading;
-
-  const footer = (
-    <View style={styles(colors).footerRow}>
-      <Text style={styles(colors).footerText}>Don't have an account? </Text>
-      <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-        <Text style={styles(colors).footerLink}>Sign Up</Text>
-      </TouchableOpacity>
-    </View>
-  );
+  const s = styles(colors);
 
   return (
-    <AuthLayout
-      title="Welcome Back"
-      subtitle="Sign in to your VocaboAi account"
-      footer={footer}
-    >
-      <Input
-        label="Email Address"
-        placeholder="Enter your email"
-        value={email}
-        onChangeText={setEmail}
-        autoCapitalize="none"
-        keyboardType="email-address"
-        editable={!isLoading}
-      />
-
-      <Input
-        label="Password"
-        placeholder="Enter your password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        editable={!isLoading}
-      />
-
-      <View style={styles(colors).spacing} />
-
-      <Button
-        label="Sign In"
-        onPress={handleEmailSignIn}
-        isLoading={authLoading}
-      />
-
-      <View style={styles(colors).divider}>
-        <View style={styles(colors).line} />
-        <Text style={styles(colors).dividerText}>OR</Text>
-        <View style={styles(colors).line} />
-      </View>
-
-      <TouchableOpacity
-        style={styles(colors).googleButton}
-        onPress={handleGoogleSignIn}
-        disabled={isLoading}
+    <SafeAreaView style={s.safe}>
+      <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        {googleLoading ? (
-          <ActivityIndicator color={colors.black} />
-        ) : (
-          <View style={styles(colors).googleButtonContent}>
-            <View style={styles(colors).googleIconPlaceholder} />
-            <Text style={styles(colors).googleButtonText}>Sign in with Google</Text>
+        <ScrollView
+          contentContainerStyle={s.scroll}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Brand Header */}
+          <View style={s.brandSection}>
+            <View style={s.logoCircle}>
+              <Text style={s.logoText}>V</Text>
+            </View>
+            <Text style={s.appName}>VocaboAi</Text>
+            <Text style={s.tagline}>Your daily reading companion</Text>
           </View>
-        )}
-      </TouchableOpacity>
-    </AuthLayout>
+
+          {/* Card */}
+          <View style={s.card}>
+            <Text style={s.cardTitle}>Welcome back 👋</Text>
+            <Text style={s.cardSubtitle}>Sign in to continue reading</Text>
+
+            <View style={s.formArea}>
+              <Input
+                label="Email Address"
+                placeholder="you@example.com"
+                value={email}
+                onChangeText={setEmail}
+                autoCapitalize="none"
+                keyboardType="email-address"
+                editable={!isLoading}
+              />
+              <Input
+                label="Password"
+                placeholder="Your password"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry
+                editable={!isLoading}
+              />
+            </View>
+
+            <Button
+              label="Sign In"
+              onPress={handleEmailSignIn}
+              isLoading={authLoading}
+            />
+
+            {/* Divider */}
+            <View style={s.divider}>
+              <View style={s.dividerLine} />
+              <Text style={s.dividerText}>or continue with</Text>
+              <View style={s.dividerLine} />
+            </View>
+
+            {/* Google Button — always white + dark text + real G icon */}
+            <TouchableOpacity
+              style={s.googleButton}
+              onPress={handleGoogleSignIn}
+              disabled={isLoading}
+              activeOpacity={0.85}
+            >
+              {googleLoading ? (
+                <ActivityIndicator color="#3C4043" />
+              ) : (
+                <>
+                  <GoogleIcon />
+                  <Text style={s.googleButtonText}>Continue with Google</Text>
+                </>
+              )}
+            </TouchableOpacity>
+          </View>
+
+          {/* Footer */}
+          <View style={s.footer}>
+            <Text style={s.footerText}>Don't have an account? </Text>
+            <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+              <Text style={s.footerLink}>Sign Up</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
 const styles = (colors: any) => StyleSheet.create({
-  spacing: {
-    height: 10,
+  safe: { flex: 1, backgroundColor: colors.background },
+  scroll: { flexGrow: 1, paddingHorizontal: 24, paddingBottom: 32 },
+
+  brandSection: {
+    alignItems: 'center',
+    paddingTop: 40,
+    paddingBottom: 32,
   },
+  logoCircle: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    backgroundColor: colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 12,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.35,
+    shadowRadius: 16,
+    elevation: 8,
+  },
+  logoText: {
+    fontSize: 36,
+    fontWeight: '900',
+    color: '#ffffff',
+  },
+  appName: {
+    fontSize: 26,
+    fontWeight: '800',
+    color: colors.text.primary,
+    letterSpacing: -0.5,
+  },
+  tagline: {
+    fontSize: 14,
+    color: colors.text.secondary,
+    marginTop: 4,
+  },
+
+  card: {
+    backgroundColor: colors.surface,
+    borderRadius: 24,
+    padding: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 20,
+    elevation: 5,
+    borderWidth: 1,
+    borderColor: colors.border.card,
+  },
+  cardTitle: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: colors.text.primary,
+    marginBottom: 4,
+  },
+  cardSubtitle: {
+    fontSize: 14,
+    color: colors.text.secondary,
+    marginBottom: 28,
+  },
+  formArea: { marginBottom: 4 },
+
   divider: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 30,
+    marginVertical: 20,
   },
-  line: {
+  dividerLine: {
     flex: 1,
     height: 1,
     backgroundColor: colors.border.default,
   },
   dividerText: {
-    marginHorizontal: 15,
-    color: colors.text.placeholder,
-    fontSize: 14,
+    marginHorizontal: 12,
+    fontSize: 13,
+    color: colors.text.muted,
   },
+
+  // Google button always has fixed colors regardless of theme
   googleButton: {
-    backgroundColor: colors.white,
-    height: 56,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: colors.border.google,
-  },
-  googleButtonContent: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  googleIconPlaceholder: {
-    width: 24,
-    height: 24,
-    backgroundColor: colors.social.google,
-    marginRight: 10,
-    borderRadius: 4,
+    justifyContent: 'center',
+    height: 52,
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: '#DADCE0',
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.06,
+    shadowRadius: 4,
+    elevation: 1,
   },
   googleButtonText: {
-    color: colors.text.primary,
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '600',
+    color: '#3C4043',
   },
-  footerRow: {
+
+  footer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 28,
   },
-  footerText: {
-    color: colors.text.secondary,
-    fontSize: 14,
-  },
-  footerLink: {
-    color: colors.primary,
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
+  footerText: { fontSize: 14, color: colors.text.secondary },
+  footerLink: { fontSize: 14, fontWeight: '700', color: colors.primary },
 });
