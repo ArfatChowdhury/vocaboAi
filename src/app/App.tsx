@@ -15,16 +15,20 @@ import {
 import { AuthProvider, useAuth } from '../features/auth/hooks/useAuth';
 import { LoginScreen } from '../features/auth/screens/LoginScreen';
 import { ActivityIndicator, TouchableOpacity } from 'react-native';
+import { colors } from '../shared/constants/Colors';
+import { ThemeProvider } from '../config/ThemeContext';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
 
   return (
     <SafeAreaProvider>
-      <AuthProvider>
-        <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-        <AppContent />
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+          <AppContent />
+        </AuthProvider>
+      </ThemeProvider>
     </SafeAreaProvider>
   );
 }
@@ -36,7 +40,7 @@ function AppContent() {
   if (loading) {
     return (
       <View style={[styles.container, styles.centered]}>
-        <ActivityIndicator size="large" color="#007AFF" />
+        <ActivityIndicator size="large" color={colors.primary} />
       </View>
     );
   }
@@ -66,7 +70,7 @@ function AppContent() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: colors.background,
     padding: 20,
   },
   centered: {
@@ -79,11 +83,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#1a1a1a',
+    color: colors.text.primary,
   },
   subtitle: {
     fontSize: 16,
-    color: '#666',
+    color: colors.text.secondary,
     marginTop: 8,
   },
   body: {
@@ -93,18 +97,18 @@ const styles = StyleSheet.create({
   },
   info: {
     fontSize: 18,
-    color: '#1a1a1a',
+    color: colors.text.primary,
     marginBottom: 30,
     textAlign: 'center',
   },
   logoutButton: {
-    backgroundColor: '#FF3B30',
+    backgroundColor: colors.error.text,
     paddingHorizontal: 40,
     paddingVertical: 15,
     borderRadius: 12,
   },
   logoutText: {
-    color: '#fff',
+    color: colors.white,
     fontSize: 16,
     fontWeight: 'bold',
   },
