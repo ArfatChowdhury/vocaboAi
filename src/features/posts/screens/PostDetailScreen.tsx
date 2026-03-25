@@ -7,7 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets, SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import usePostDetail from '../hooks/usePostDetail';
 import useLikes from '../hooks/useLikes';
@@ -28,6 +28,7 @@ const PostDetailScreen = () => {
   const { isLiked, likeCount, toggleLike } = useLikes(postId);
   const { colors } = useTheme();
   const s = styles(colors);
+  const insets = useSafeAreaInsets();
 
   if (isLoading && !post) {
     return (
@@ -66,8 +67,9 @@ const PostDetailScreen = () => {
     return `hsl(${hues[index % hues.length]}, 70%, 55%)`;
   };
 
+
   return (
-    <SafeAreaView style={s.container} edges={['top']}>
+    <SafeAreaView edges={['bottom']} style={s.container}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={s.scrollContent}

@@ -7,7 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets, SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import usePosts from '../hooks/usePosts';
 import { useTheme } from '../../../config/ThemeContext';
@@ -23,6 +23,7 @@ const PostsListScreen = () => {
   const { data: posts, isLoading, error } = usePosts();
   const { colors } = useTheme();
   const s = styles(colors);
+  const insets = useSafeAreaInsets();
 
   if (isLoading && !posts) {
     return (
@@ -113,8 +114,9 @@ const PostsListScreen = () => {
     </View>
   );
 
+
   return (
-    <SafeAreaView style={s.container} edges={['top']}>
+    <SafeAreaView edges={['bottom']} style={s.container}>
       <FlatList
         data={posts}
         keyExtractor={(item) => item.id.toString()}
