@@ -5,9 +5,9 @@ import {
   FlatList,
   ActivityIndicator,
   StyleSheet,
-  SafeAreaView,
   TouchableOpacity,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import usePosts from '../hooks/usePosts';
 import { useTheme } from '../../../config/ThemeContext';
@@ -114,7 +114,7 @@ const PostsListScreen = () => {
   );
 
   return (
-    <SafeAreaView style={s.container}>
+    <SafeAreaView style={s.container} edges={['top']}>
       <FlatList
         data={posts}
         keyExtractor={(item) => item.id.toString()}

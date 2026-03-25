@@ -6,8 +6,8 @@ import {
   ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
-  SafeAreaView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import usePostDetail from '../hooks/usePostDetail';
 import useLikes from '../hooks/useLikes';
@@ -67,7 +67,7 @@ const PostDetailScreen = () => {
   };
 
   return (
-    <SafeAreaView style={s.container}>
+    <SafeAreaView style={s.container} edges={['top']}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={s.scrollContent}
