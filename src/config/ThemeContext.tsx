@@ -1,12 +1,13 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import { useColorScheme } from 'react-native';
-import { colors } from '../shared/constants/Colors';
+import { lightColors, darkColors } from '../shared/constants/Colors';
 
 type Theme = 'light' | 'dark';
+type AppColors = typeof lightColors;
 
 interface ThemeContextType {
   theme: Theme;
-  colors: typeof colors;
+  colors: AppColors;
   isDark: boolean;
 }
 
@@ -18,7 +19,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const value = useMemo(() => ({
     theme,
-    colors: colors, // We can extend this logic for dark mode colors later
+    colors: theme === 'dark' ? darkColors : lightColors,
     isDark: theme === 'dark',
   }), [theme]);
 

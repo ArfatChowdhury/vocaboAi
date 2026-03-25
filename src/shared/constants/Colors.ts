@@ -1,4 +1,4 @@
-export const colors = {
+export const lightColors = {
   primary: '#007AFF',
   background: '#ffffff',
   text: {
@@ -11,7 +11,7 @@ export const colors = {
     default: '#eeeeee',
     card: '#f0f0f0',
     input: '#dddddd',
-    google: '#dddddd'
+    google: '#dddddd',
   },
   error: {
     text: '#FF3B30',
@@ -27,3 +27,36 @@ export const colors = {
   black: '#000000',
   white: '#ffffff',
 };
+
+export const darkColors: typeof lightColors = {
+  primary: '#0A84FF',
+  background: '#121212',
+  text: {
+    primary: '#F2F2F2',
+    secondary: '#A0A0A0',
+    placeholder: '#666666',
+    inverse: '#1a1a1a',
+  },
+  border: {
+    default: '#2C2C2E',
+    card: '#1C1C1E',
+    input: '#3A3A3C',
+    google: '#3A3A3C',
+  },
+  error: {
+    text: '#FF453A',
+    background: '#2C1515',
+  },
+  input: {
+    background: '#1C1C1E',
+  },
+  social: {
+    google: '#4285F4',
+  },
+  transparent: 'transparent',
+  black: '#000000',
+  white: '#ffffff',
+};
+
+// Default export keeps backwards compatibility
+export const colors = lightColors;

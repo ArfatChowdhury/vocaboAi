@@ -7,8 +7,8 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
-import { colors } from '../constants/Colors';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTheme } from '../../config/ThemeContext';
 
 export interface AuthLayoutProps {
   title: string;
@@ -23,33 +23,35 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
   children,
   footer,
 }) => {
+  const { colors } = useTheme();
+
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles(colors).safeArea}>
       <KeyboardAvoidingView
-        style={styles.container}
+        style={styles(colors).container}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
       >
         <ScrollView
-          contentContainerStyle={styles.scrollContent}
+          contentContainerStyle={styles(colors).scrollContent}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          <View style={styles.header}>
-            <Text style={styles.title}>{title}</Text>
-            {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
+          <View style={styles(colors).header}>
+            <Text style={styles(colors).title}>{title}</Text>
+            {subtitle && <Text style={styles(colors).subtitle}>{subtitle}</Text>}
           </View>
 
-          <View style={styles.body}>{children}</View>
+          <View style={styles(colors).body}>{children}</View>
 
-          {footer && <View style={styles.footer}>{footer}</View>}
+          {footer && <View style={styles(colors).footer}>{footer}</View>}
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
+const styles = (colors: any) => StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: colors.background,

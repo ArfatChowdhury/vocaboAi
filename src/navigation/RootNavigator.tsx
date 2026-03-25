@@ -1,4 +1,5 @@
 import React from 'react';
+import { TouchableOpacity, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useAuth } from '../features/auth/hooks/useAuth';
@@ -27,10 +28,9 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
  * Switches between AuthStack and AppStack dynamically based on Firebase auth state.
  */
 const RootNavigator = () => {
-  const { user, loading } = useAuth();
+  const { user, loading, logOut } = useAuth();
 
-  // If Firebase auth is still initializing, we can show a splash/loading state here
-  // (Note: Already handled in App.tsx typically, but good for internal navigation safety)
+  // If Firebase auth is still initializing, render nothing (splash-safe)
   if (loading) return null;
 
   return (
@@ -38,15 +38,31 @@ const RootNavigator = () => {
       <Stack.Navigator>
         {user ? (
           // AppStack: Accessible only to logged-in users
-          <Stack.Group screenOptions={{ headerShown: true }}>
-            <Stack.Screen 
-              name="PostsList" 
-              component={PostsListScreen} 
-              options={{ title: 'VocaboAi Feed' }}
+          <Stack.Group
+            screenOptions={{
+              headerShown: true,
+              headerStyle: { backgroundColor: '#007AFF' },
+              headerTintColor: '#ffffff',
+              headerTitleStyle: { fontWeight: 'bold' },
+            }}
+          >
+            <Stack.Screen
+              name="PostsList"
+              component={PostsListScreen}
+              options={{
+                title: 'VocaboAi Feed',
+                headerRight: () => (
+                  <TouchableOpacity onPress={logOut} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+                    <Text style={{ color: '#ffffff', fontSize: 15, fontWeight: '600' }}>
+                      Logout
+                    </Text>
+                  </TouchableOpacity>
+                ),
+              }}
             />
-            <Stack.Screen 
-              name="PostDetail" 
-              component={PostDetailScreen} 
+            <Stack.Screen
+              name="PostDetail"
+              component={PostDetailScreen}
               options={{ title: 'Post Details' }}
             />
           </Stack.Group>

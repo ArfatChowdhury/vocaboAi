@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '../hooks/useAuth';
 import { AuthLayout } from '../../../shared/components/AuthLayout';
 import { Input } from '../../../shared/components/Input';
 import { Button } from '../../../shared/components/Button';
 import { useTheme } from '../../../config/ThemeContext';
+import { RootStackParamList } from '../../../navigation/RootNavigator';
 
-// Note: If you have a navigation prop, you can type it here.
+type SignUpNavProp = NativeStackNavigationProp<RootStackParamList, 'SignUp'>;
+
 export const SignUpScreen = () => {
   const { colors } = useTheme();
+  const navigation = useNavigation<SignUpNavProp>();
   const { signUp, loading: authLoading } = useAuth();
 
   const [email, setEmail] = useState('');
@@ -44,7 +49,7 @@ export const SignUpScreen = () => {
   const footer = (
     <View style={styles(colors).footerRow}>
       <Text style={styles(colors).footerText}>Already have an account? </Text>
-      <TouchableOpacity onPress={() => console.log('Navigate to Login')}>
+      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
         <Text style={styles(colors).footerLink}>Sign In</Text>
       </TouchableOpacity>
     </View>
@@ -67,7 +72,7 @@ export const SignUpScreen = () => {
         keyboardType="email-address"
         editable={!authLoading}
       />
-      
+
       <Input
         label="Password"
         placeholder="Create a password"

@@ -1,6 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
-import { colors } from '../constants/Colors';
+import { useTheme } from '../../config/ThemeContext';
 
 export interface CardProps {
   title: string;
@@ -9,12 +9,14 @@ export interface CardProps {
 }
 
 export const Card: React.FC<CardProps> = ({ title, body, onPress }) => {
+  const { colors } = useTheme();
+
   const CardContent = (
     <>
-      <Text style={styles.title} numberOfLines={1}>
+      <Text style={styles(colors).title} numberOfLines={1}>
         {title}
       </Text>
-      <Text style={styles.body} numberOfLines={3}>
+      <Text style={styles(colors).body} numberOfLines={3}>
         {body}
       </Text>
     </>
@@ -22,8 +24,8 @@ export const Card: React.FC<CardProps> = ({ title, body, onPress }) => {
 
   if (onPress) {
     return (
-      <TouchableOpacity 
-        style={styles.card} 
+      <TouchableOpacity
+        style={styles(colors).card}
         onPress={onPress}
         activeOpacity={0.7}
       >
@@ -32,12 +34,12 @@ export const Card: React.FC<CardProps> = ({ title, body, onPress }) => {
     );
   }
 
-  return <View style={styles.card}>{CardContent}</View>;
+  return <View style={styles(colors).card}>{CardContent}</View>;
 };
 
-const styles = StyleSheet.create({
+const styles = (colors: any) => StyleSheet.create({
   card: {
-    backgroundColor: colors.background,
+    backgroundColor: colors.input.background,
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
@@ -45,7 +47,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3, // For Android shadow
+    elevation: 3,
     borderWidth: 1,
     borderColor: colors.border.card,
   },

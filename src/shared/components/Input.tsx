@@ -1,27 +1,29 @@
 import React from 'react';
 import { View, Text, TextInput, StyleSheet, TextInputProps } from 'react-native';
-import { colors } from '../constants/Colors';
+import { useTheme } from '../../config/ThemeContext';
 
 export interface InputProps extends TextInputProps {
   label?: string;
   error?: string;
 }
 
-export const Input: React.FC<InputProps> = ({ 
-  label, 
-  error, 
-  value, 
-  onChangeText, 
-  placeholder, 
-  secureTextEntry, 
-  ...props 
+export const Input: React.FC<InputProps> = ({
+  label,
+  error,
+  value,
+  onChangeText,
+  placeholder,
+  secureTextEntry,
+  ...props
 }) => {
+  const { colors } = useTheme();
+
   return (
-    <View style={styles.container}>
-      {label ? <Text style={styles.label}>{label}</Text> : null}
-      
+    <View style={styles(colors).container}>
+      {label ? <Text style={styles(colors).label}>{label}</Text> : null}
+
       <TextInput
-        style={[styles.input, error ? styles.inputError : null]}
+        style={[styles(colors).input, error ? styles(colors).inputError : null]}
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
@@ -29,13 +31,13 @@ export const Input: React.FC<InputProps> = ({
         secureTextEntry={secureTextEntry}
         {...props}
       />
-      
-      {error ? <Text style={styles.errorText}>{error}</Text> : null}
+
+      {error ? <Text style={styles(colors).errorText}>{error}</Text> : null}
     </View>
   );
 };
 
-const styles = StyleSheet.create({
+const styles = (colors: any) => StyleSheet.create({
   container: {
     marginBottom: 20,
     width: '100%',
@@ -52,7 +54,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 16,
     fontSize: 16,
-    color: colors.black,
+    color: colors.text.primary,
     borderWidth: 1,
     borderColor: colors.border.default,
   },

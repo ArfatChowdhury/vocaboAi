@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { useRoute, RouteProp } from '@react-navigation/native';
 import usePostDetail from '../hooks/usePostDetail';
+import useLikes from '../hooks/useLikes';
 import { useTheme } from '../../../config/ThemeContext';
 
 // Define the navigation params expected for this screen
@@ -18,27 +19,15 @@ type PostDetailRouteProp = RouteProp<{ PostDetail: { postId: number } }, 'PostDe
 /**
  * PostDetailScreen
  * Shows full post content, like interaction, and a list of comments.
- * Uses usePostDetail hook to concurrently fetch post and comments.
+ * Uses usePostDetail for concurrent post+comments fetch with AsyncStorage caching.
+ * Uses useLikes for persisted like state that survives navigation and app restarts.
  */
 const PostDetailScreen = () => {
   const route = useRoute<PostDetailRouteProp>();
   const { postId } = route.params;
   const { post, comments, isLoading, error } = usePostDetail(postId);
+  const { isLiked, likeCount, toggleLike } = useLikes(postId);
   const { colors } = useTheme();
-
-  // Local state for interactive Like feature
-  const [isLiked, setIsLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(0);
-
-  const handleLikeToggle = () => {
-    if (isLiked) {
-      setIsLiked(false);
-      setLikeCount((prev) => Math.max(0, prev - 1));
-    } else {
-      setIsLiked(true);
-      setLikeCount((prev) => prev + 1);
-    }
-  };
 
   // Center indicator while fetching data
   if (isLoading && !post) {
@@ -75,7 +64,7 @@ const PostDetailScreen = () => {
         <View style={styles(colors).interactionRow}>
           <TouchableOpacity
             style={styles(colors).likeButton}
-            onPress={handleLikeToggle}
+            onPress={toggleLike}
             activeOpacity={0.7}
           >
             <Text style={[
