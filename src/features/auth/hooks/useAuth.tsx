@@ -3,7 +3,7 @@ import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from '../../../config/firebase';
 import { authService } from '../services/authService';
 import { googleAuthService } from '../services/googleAuthService';
-import { AuthCredentials, SignUpCredentials } from '../types';
+import { AuthCredentials, SignUpCredentials } from '../../../shared/types';
 
 interface AuthContextType {
     user: User | null;

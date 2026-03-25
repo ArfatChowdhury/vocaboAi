@@ -1,12 +1,12 @@
-import { 
-    createUserWithEmailAndPassword, 
-    signInWithEmailAndPassword, 
+import {
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
     signOut,
     updateProfile,
     User
 } from 'firebase/auth';
 import { auth } from '../../../config/firebase';
-import { AuthCredentials, SignUpCredentials } from '../types';
+import { AuthCredentials, SignUpCredentials } from '../../../shared/types';
 
 export const authService = {
     /**
@@ -16,11 +16,11 @@ export const authService = {
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
-            
+
             if (displayName) {
                 await updateProfile(user, { displayName });
             }
-            
+
             return user;
         } catch (error: any) {
             throw new Error(error.message || 'Error signing up');

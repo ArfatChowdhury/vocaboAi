@@ -38,3 +38,13 @@ export interface PostDetailState {
   isLoading: boolean
   error: string | null
 }
+// Credentials for signing in
+export interface AuthCredentials {
+  email: string
+  password: string
+}
+
+// Credentials for signing up (includes optional display name)
+export interface SignUpCredentials extends AuthCredentials {
+  displayName?: string
+}
