@@ -4,10 +4,11 @@ import { useAuth } from '../hooks/useAuth';
 import { AuthLayout } from '../../../shared/components/AuthLayout';
 import { Input } from '../../../shared/components/Input';
 import { Button } from '../../../shared/components/Button';
-import { colors } from '../../../shared/constants/Colors';
+import { useTheme } from '../../../config/ThemeContext';
 
 // Note: If you have a navigation prop, you can type it here.
 export const SignUpScreen = () => {
+  const { colors } = useTheme();
   const { signUp, loading: authLoading } = useAuth();
 
   const [email, setEmail] = useState('');
@@ -41,10 +42,10 @@ export const SignUpScreen = () => {
   };
 
   const footer = (
-    <View style={styles.footerRow}>
-      <Text style={styles.footerText}>Already have an account? </Text>
+    <View style={styles(colors).footerRow}>
+      <Text style={styles(colors).footerText}>Already have an account? </Text>
       <TouchableOpacity onPress={() => console.log('Navigate to Login')}>
-        <Text style={styles.footerLink}>Sign In</Text>
+        <Text style={styles(colors).footerLink}>Sign In</Text>
       </TouchableOpacity>
     </View>
   );
@@ -55,7 +56,7 @@ export const SignUpScreen = () => {
       subtitle="Sign up to get started with VocaboAi"
       footer={footer}
     >
-      {error ? <Text style={styles.mainErrorText}>{error}</Text> : null}
+      {error ? <Text style={styles(colors).mainErrorText}>{error}</Text> : null}
 
       <Input
         label="Email Address"
@@ -85,7 +86,7 @@ export const SignUpScreen = () => {
         editable={!authLoading}
       />
 
-      <View style={styles.spacing} />
+      <View style={styles(colors).spacing} />
 
       <Button
         label="Sign Up"
@@ -96,7 +97,7 @@ export const SignUpScreen = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = (colors: any) => StyleSheet.create({
   spacing: {
     height: 10,
   },
